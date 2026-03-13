@@ -18,6 +18,7 @@
     "mongodb": "^6.10.0"
   },
   "devDependencies": {
+    "@types/dns-packet": "^5.6.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.0"
   }

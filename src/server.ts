@@ -22,7 +22,7 @@ async function main() {
   server.on("message", async (msg, rinfo) => {
     const clientInfo = `${rinfo.address}:${rinfo.port}`;
     try {
-      const query = dnsPacket.decode(msg) as dnsPacket.DNSPacket;
+      const query = dnsPacket.decode(msg);
       logger.info("Received DNS query", {
         client: clientInfo,
         id: query.id,
