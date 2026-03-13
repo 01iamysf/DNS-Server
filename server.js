@@ -31,5 +31,5 @@ server.on("error", (err) => {
 });
 
 server.bind(5300, () => {
-  console.log("DNS server running on port 5353");
+  console.log("DNS server running on port 5300");
 });
