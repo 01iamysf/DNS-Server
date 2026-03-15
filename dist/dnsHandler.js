@@ -81,7 +81,14 @@ function recordsForQuestion(zone, qname, qtype) {
     if (qtype === "ANY") {
         return recs;
     }
-    return recs.filter((r) => r.type === qtype);
+    const filtered = recs.filter((r) => r.type === qtype);
+    // If no A record but CNAME exists, return CNAME
+    if (filtered.length === 0) {
+        const cname = recs.find((r) => r.type === "CNAME");
+        if (cname)
+            return [cname];
+    }
+    return filtered;
 }
 function toDnsAnswer(qname, record) {
     const name = normalizeName(qname);
@@ -102,6 +109,15 @@ function toDnsAnswer(qname, record) {
                 name,
                 ttl: r.ttl,
                 data: r.address,
+            };
+        }
+        case "CNAME": {
+            const r = record;
+            return {
+                type: "CNAME",
+                name,
+                ttl: r.ttl,
+                data: r.value,
             };
         }
         case "NS": {

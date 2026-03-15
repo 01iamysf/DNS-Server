@@ -1,4 +1,4 @@
-export type RecordType = "A" | "AAAA" | "NS" | "SOA";
+export type RecordType = "A" | "AAAA" | "NS" | "SOA" | "CNAME";
 
 export interface ARecord {
   type: "A";
@@ -10,6 +10,12 @@ export interface AAAARecord {
   type: "AAAA";
   ttl: number;
   address: string;
+}
+
+export interface CNAMERecord {
+  type: "CNAME";
+  ttl: number;
+  value: string;
 }
 
 export interface NSRecord {
@@ -30,7 +36,7 @@ export interface SOARecord {
   minimum: number;
 }
 
-export type ZoneRecord = ARecord | AAAARecord | NSRecord | SOARecord;
+export type ZoneRecord = ARecord | AAAARecord | NSRecord | SOARecord | CNAMERecord;
 
 export interface Zone {
   name: string;

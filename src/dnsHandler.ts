@@ -55,12 +55,23 @@ function recordsForQuestion(
   qname: string,
   qtype: string
 ): ZoneRecord[] {
+
   const host = hostLabelInZone(qname, zone.name);
   const recs = zone.records[host] || [];
+
   if (qtype === "ANY") {
     return recs;
   }
-  return recs.filter((r) => r.type === qtype);
+
+  const filtered = recs.filter((r) => r.type === qtype);
+
+  // If no A record but CNAME exists, return CNAME
+  if (filtered.length === 0) {
+    const cname = recs.find((r) => r.type === "CNAME");
+    if (cname) return [cname];
+  }
+
+  return filtered;
 }
 
 function toDnsAnswer(qname: string, record: ZoneRecord): dnsPacket.Answer {
@@ -85,6 +96,17 @@ function toDnsAnswer(qname: string, record: ZoneRecord): dnsPacket.Answer {
         data: r.address,
       };
     }
+
+   case "CNAME": {
+     const r = record as ZoneRecord & { value: string; ttl: number };
+     return {
+    	     type: "CNAME",
+    	     name,
+    	     ttl: r.ttl,
+    	     data: r.value,
+     };
+   }
+
     case "NS": {
       const r = record as NSRecord;
       return {
