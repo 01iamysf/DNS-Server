@@ -35,15 +35,33 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handleDnsQuery = handleDnsQuery;
 const dnsPacket = __importStar(require("dns-packet"));
+const RCODE_NOERROR = 0;
+const RCODE_NXDOMAIN = 3;
 function normalizeName(name) {
-    return name.endsWith(".") ? name.slice(0, -1).toLowerCase() : name.toLowerCase();
+    return name.endsWith(".")
+        ? name.slice(0, -1).toLowerCase()
+        : name.toLowerCase();
 }
+/**
+ * Find the best matching zone for a query name. Only matches if the name
+ * is exactly the zone name or a proper subdomain (e.g. www.yourdomain.com
+ * for zone yourdomain.com). Does not match unrelated domains (e.g. google.com
+ * never matches zone yourdomain.com).
+ */
 function findZoneForName(zones, qname) {
     const name = normalizeName(qname);
-    // Prefer the longest matching suffix (most specific zone)
-    return zones
-        .filter((z) => name === normalizeName(z.name) || name.endsWith(`.${normalizeName(z.name)}`))
-        .sort((a, b) => b.name.length - a.name.length)[0];
+    const normalizedZones = zones
+        .filter((z) => {
+        const zName = normalizeName(z.name);
+        if (name === zName)
+            return true;
+        // Must be a proper subdomain: name ends with .zoneName and has more than zoneName
+        if (name.length <= zName.length)
+            return false;
+        return name.endsWith("." + zName);
+    })
+        .sort((a, b) => normalizeName(b.name).length - normalizeName(a.name).length);
+    return normalizedZones[0];
 }
 function hostLabelInZone(qname, zoneName) {
     const name = normalizeName(qname);
@@ -51,7 +69,7 @@ function hostLabelInZone(qname, zoneName) {
     if (name === zone) {
         return "@";
     }
-    const suffix = `.${zone}`;
+    const suffix = "." + zone;
     if (name.endsWith(suffix)) {
         return name.slice(0, -suffix.length);
     }
@@ -113,31 +131,30 @@ function toDnsAnswer(qname, record) {
             };
         }
         default:
-            // dns-packet types are string-based; fall back to A shape to avoid crashes
             return {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 type: record.type,
                 name,
                 ttl: record.ttl ?? 300,
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                data: record.address ?? record.host,
+                data: record.address ??
+                    record.host,
             };
     }
 }
 async function handleDnsQuery(query, zones) {
     const answers = [];
+    let atLeastOneQuestionHadZone = false;
     for (const q of query.questions || []) {
         const qname = q.name;
-        const qtype = q.type.toUpperCase();
+        const qtype = typeof q.type === "string" ? q.type.toUpperCase() : String(q.type);
         const zone = findZoneForName(zones, qname);
         if (!zone) {
             continue;
         }
+        atLeastOneQuestionHadZone = true;
         const recs = recordsForQuestion(zone, qname, qtype);
         for (const rec of recs) {
             answers.push(toDnsAnswer(qname, rec));
         }
-        // For SOA/NS queries, if no explicit record is found, fall back to zone-level data
         if (recs.length === 0 && qtype === "SOA") {
             answers.push(toDnsAnswer(zone.name, zone.soa));
         }
@@ -147,12 +164,17 @@ async function handleDnsQuery(query, zones) {
             }
         }
     }
+    const questions = query.questions ?? [];
+    const hasQuestions = questions.length > 0;
+    const shouldReturnNxdomain = hasQuestions && !atLeastOneQuestionHadZone;
+    const rcode = shouldReturnNxdomain ? RCODE_NXDOMAIN : RCODE_NOERROR;
+    const responseFlags = dnsPacket.AUTHORITATIVE_ANSWER | (rcode & 0xf);
     const response = {
         type: "response",
         id: query.id,
-        flags: dnsPacket.AUTHORITATIVE_ANSWER,
-        questions: query.questions,
-        answers,
+        flags: responseFlags,
+        questions,
+        answers: shouldReturnNxdomain ? [] : answers,
     };
     return response;
 }
