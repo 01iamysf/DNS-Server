@@ -16,9 +16,13 @@ This project demonstrates how DNS works internally by handling DNS queries and r
 ### Project Structure
 
 DNS-Server
+
 ├── src        # TypeScript source code
+
 ├── dist       # Compiled JavaScript files
+
 ├── zones      # DNS zone configuration
+
 ├── docs       # Documentation and deployment guides
 
 ---
