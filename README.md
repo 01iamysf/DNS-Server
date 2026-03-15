@@ -7,6 +7,26 @@ This project demonstrates how DNS works internally by handling DNS queries and r
 
 ---
 
+### Internet DNS Hierarchy
+
+                Root DNS Servers
+                       │
+                       ▼
+                 TLD Servers
+            (.com, .org, .net, etc.)
+                       │
+                       ▼
+           Authoritative DNS Server
+                (This Project)
+                       │
+                       ▼
+                  DNS Records
+        (A, AAAA, CNAME, NS, SOA)
+                       │
+                       ▼
+                    Client
+             (Browser / Device)
+
 ### Features
 
 - Lightweight DNS server implementation
