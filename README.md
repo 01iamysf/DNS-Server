@@ -30,7 +30,7 @@ This project demonstrates how DNS works internally by handling DNS queries and r
              See in Img...
                        │
                        ▼
-             1_goSb1oow5UBNF3KkzvOX8A.png
+             [1_goSb1oow5UBNF3KkzvOX8A.png](https://github.com/01iamysf/DNS-Server/blob/main/1_goSb1oow5UBNF3KkzvOX8A.png)
 
 ### Features
 
