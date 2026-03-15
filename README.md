@@ -27,6 +27,11 @@ This project demonstrates how DNS works internally by handling DNS queries and r
                     Client
              (Browser / Device)
 
+             See in Img...
+                       │
+                       ▼
+             1_goSb1oow5UBNF3KkzvOX8A.png
+
 ### Features
 
 - Lightweight DNS server implementation
