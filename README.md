@@ -1,7 +1,9 @@
 # Custom DNS-Server
 
-A simple custom DNS server built with Node.js and TypeScript.
-This project demonstrates how DNS works internally by handling DNS queries and returning records from a local zone configuration.
+A custom authoritative DNS server built with Node.js and TypeScript.
+It operates at the Authoritative DNS Server level in the DNS hierarchy, meaning it directly responds to queries for domains defined in its zone configuration.
+
+This project demonstrates how DNS works internally by handling DNS queries and returning records from a local zone configuration
 
 ---
 
