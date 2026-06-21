@@ -58,10 +58,10 @@
     ],
     "records": {
       "@": [
-        { "type": "A", "ttl": 300, "address": "192.168.22.36" }
+        { "type": "A", "ttl": 300, "address": "127.0.0.1" }
       ],
       "www": [
-        { "type": "A", "ttl": 300, "address": "192.168.22.36" }
+        { "type": "A", "ttl": 300, "address": "127.0.0.1" }
       ]
     }
   },
@@ -92,6 +92,36 @@
       ],
       "www": [
         { "type": "A", "ttl": 300, "address": "192.168.22.37" }
+      ]
+    }
+  },
+
+  {
+    "name": "mysite.test",
+    "soa": {
+      "type": "SOA",
+      "ttl": 300,
+      "mname": "ns1.mysite.test",
+      "rname": "admin.mysite.test",
+      "serial": 1,
+      "refresh": 3600,
+      "retry": 600,
+      "expire": 1209600,
+      "minimum": 300
+    },
+    "ns": [
+      {
+        "type": "NS",
+        "ttl": 300,
+        "host": "ns1.mysite.test"
+      }
+    ],
+    "records": {
+      "@": [
+        { "type": "A", "ttl": 300, "address": "127.0.0.1" }
+      ],
+      "www": [
+        { "type": "A", "ttl": 300, "address": "127.0.0.1" }
       ]
     }
   }
