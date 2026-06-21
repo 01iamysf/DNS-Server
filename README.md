@@ -70,9 +70,9 @@ cd DNS-Server
 
   - Run the DNS Server
 
-  - sudo node dist/server.js
+  - npm start
   
-- The server listens on UDP port 53 and resolves domains based on the records defined in "zones/zones.json".
+- The server listens on UDP port 5300 by default and resolves domains based on the records defined in "zones/zones.json".
 
 ---
 
@@ -80,11 +80,11 @@ cd DNS-Server
 
 - Example DNS query:
 
-  dig @127.0.0.1 -p 5300 mysite.dev
+  dig @127.0.0.1 -p 5300 mysite.dev +short
 
-  dig @127.0.0.1 -p 5300 ysf.host
+  dig @127.0.0.1 -p 5300 ysf.host +short
 
-  dig @127.0.0.1 -p 5300 doman.name
+  dig @127.0.0.1 -p 5300 www.dnsysf.local +short
 
 ---
 
