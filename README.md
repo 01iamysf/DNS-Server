@@ -103,7 +103,7 @@ Because Port 53 is a protected system port, you must run it with `sudo`, and you
 
 ---
 
-### 🛠️ Adding New Domains
+###  Adding New Domains
 
 To add new domains, simply edit `zones/zones.json`. 
 
