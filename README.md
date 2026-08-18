@@ -80,7 +80,7 @@ By default, the server runs on Port `5300` so that it doesn't require administra
 
 ---
 
-### 🌐 Usage: Full Local Homelab (Port 53)
+###  Usage: Full Local Homelab (Port 53)
 
 If you want to use this DNS server exactly like a production server (so your web browser actually uses it to load websites), it **must** run on Port `53`. 
 
