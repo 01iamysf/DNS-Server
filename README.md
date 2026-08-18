@@ -61,7 +61,7 @@ It operates at the Authoritative DNS Server level in the DNS hierarchy, meaning 
 
 ---
 
-### 🚀 Usage: Development & Testing (Port 5300)
+###  Usage: Development & Testing (Port 5300)
 
 By default, the server runs on Port `5300` so that it doesn't require administrator/root privileges, making it safe and easy to test.
 
